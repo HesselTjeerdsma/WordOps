@@ -1329,8 +1329,8 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                     "--no-plugins --no-scripts -n --no-dev -d "
                     "/var/www/22222/htdocs/db/pma/")
                 WOShellExec.cmd_exec(
-                    self, "yarn install"
-                    "--cwd"
+                    self, "yarn install "
+                    "--cwd "
                     "/var/www/22222/htdocs/db/pma"
                 WOFileUtils.chown(
                     self, '{0}22222/htdocs/db/pma'
