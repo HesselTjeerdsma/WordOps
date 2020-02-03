@@ -1307,7 +1307,7 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                                   'www-data',
                                   recursive=True)
 
-        # composer install and phpmyadmin update
+        # composer and yarn install and phpmyadmin update
         if any('/var/lib/wo/tmp/composer-install' == x[1]
                for x in packages):
             Log.wait(self, "Installing composer")
@@ -1318,6 +1318,9 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                             '/usr/local/bin/composer')
             WOFileUtils.chmod(self, "/usr/local/bin/composer", 0o775)
             Log.valide(self, "Installing composer")
+            Log.wait(self, "Installing Yarn")
+            WOShellExec.cmd_exec(self, "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo \"deb https://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list && sudo apt update && sudo apt install yarn" , 
+            Log.valide(self, "Installing Yarn")
             if ((os.path.isdir("/var/www/22222/htdocs/db/pma")) and
                     (not os.path.isfile('/var/www/22222/htdocs/db/'
                                         'pma/composer.lock'))):
@@ -1325,6 +1328,10 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                 WOShellExec.cmd_exec(
                     self, "/usr/local/bin/composer update "
                     "--no-plugins --no-scripts -n --no-dev -d "
+                    "/var/www/22222/htdocs/db/pma/")
+                WOShellExec.cmd_exec(
+                    self, "yarn install"
+                    "--no-silent"
                     "/var/www/22222/htdocs/db/pma/")
                 WOFileUtils.chown(
                     self, '{0}22222/htdocs/db/pma'
