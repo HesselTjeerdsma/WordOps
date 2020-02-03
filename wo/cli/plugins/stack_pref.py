@@ -1311,19 +1311,18 @@ def post_pref(self, apt_packages, packages, upgrade=False):
         if any('/var/lib/wo/tmp/composer-install' == x[1]
                for x in packages):
             Log.wait(self, "Installing composer")
-            WOShellExec.cmd_exec(self, "php -q /var/lib/wo"
-                                 "/tmp/composer-install "
+            WOShellExec.cmd_exec(self, "php -q /var/lib/wo/tmp/composer-install "
                                  "--install-dir=/var/lib/wo/tmp/")
             shutil.copyfile('/var/lib/wo/tmp/composer.phar',
                             '/usr/local/bin/composer')
             WOFileUtils.chmod(self, "/usr/local/bin/composer", 0o775)
             Log.valide(self, "Installing composer")
-            Log.wait(self, "Installing Yarn")
-            WOShellExec.cmd_exec(self, "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo \"deb https://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list && sudo apt update && sudo apt install yarn" , 
-            Log.valide(self, "Installing Yarn")
             if ((os.path.isdir("/var/www/22222/htdocs/db/pma")) and
                     (not os.path.isfile('/var/www/22222/htdocs/db/'
                                         'pma/composer.lock'))):
+                Log.wait(self, "Installing Yarn")
+                WOShellExec.cmd_exec(self, "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo \"deb https://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list && sudo apt update && sudo apt install yarn" , 
+                Log.valide(self, "Installing Yarn")
                 Log.wait(self, "Updating phpMyAdmin")
                 WOShellExec.cmd_exec(
                     self, "/usr/local/bin/composer update "
@@ -1335,7 +1334,7 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                     "/var/www/22222/htdocs/db/pma/")
                 WOShellExec.cmd_exec(
                     self, "composer install"
-                    "--silent"
+                    "--no-interaction"
                     "/var/www/22222/htdocs/db/pma/")
                 WOFileUtils.chown(
                     self, '{0}22222/htdocs/db/pma'
