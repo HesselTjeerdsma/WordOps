@@ -1331,7 +1331,11 @@ def post_pref(self, apt_packages, packages, upgrade=False):
                     "/var/www/22222/htdocs/db/pma/")
                 WOShellExec.cmd_exec(
                     self, "yarn install"
-                    "--no-silent"
+                    "--silent"
+                    "/var/www/22222/htdocs/db/pma/")
+                WOShellExec.cmd_exec(
+                    self, "composer install"
+                    "--silent"
                     "/var/www/22222/htdocs/db/pma/")
                 WOFileUtils.chown(
                     self, '{0}22222/htdocs/db/pma'
